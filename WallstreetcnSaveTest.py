@@ -10,6 +10,28 @@ import datetime
 import multiprocessing as mp
 
 
+Category_Map = {
+    "1":u"外汇",
+    "2":u"股市",
+    "3":u"商品",
+    "4":u"债市",
+    "5":u"央行",
+    "9":u"中国",
+    "10":u"美国",
+    "11":u"欧元区",
+    "12":u"日本",
+    "13":u"英国",
+    "14":u"澳洲",
+    "15":u"加拿大",
+    "16":u"瑞士",
+    "17":u"其他地区"
+}
+def num2name(category_num):
+    if Category_Map.has_key(category_num):
+        return Category_Map[category_num]
+    else:
+        return ""
+
 class MongoDBIO:
     # 申明相关的属性
     def __init__(self, host, port, name, password, database, collection):
@@ -34,39 +56,14 @@ class MongoDBIO:
         # print "Collection:", posts.name
         return posts
 
-# # 保存操作
+# 保存操作
 # def ResultSave(save_host, save_port, save_name, save_password, save_database, save_collection, save_contents):
 #     posts = MongoDBIO(save_host, save_port, save_name, save_password, save_database, save_collection).Connection()
-#
 #     for save_content in save_contents:
 #         posts.save(save_content)
-# 保存操作
 def ResultSave(save_host, save_port, save_name, save_password, save_database, save_collection, save_content):
     posts = MongoDBIO(save_host, save_port, save_name, save_password, save_database, save_collection).Connection()
     posts.save(save_content)
-
-def num2name(category_num):
-    # 映射
-    Category_Map = {
-        "1":u"外汇",
-        "2":u"股市",
-        "3":u"商品",
-        "4":u"债市",
-        "5":u"央行",
-        "9":u"中国",
-        "10":u"美国",
-        "11":u"欧元区",
-        "12":u"日本",
-        "13":u"英国",
-        "14":u"澳洲",
-        "15":u"加拿大",
-        "16":u"瑞士",
-        "17":u"其他地区"
-    }
-    if Category_Map.has_key(category_num):
-        return Category_Map[category_num]
-    else:
-        return ""
 
 def Spider(url, data):
     # # 方法1：requests get
@@ -87,7 +84,7 @@ def ContentSave(item):
     save_name = ""
     save_password = ""
     save_database = "textclassify"
-    save_collection = "WallstreetcnSavePython"
+    save_collection = "WallstreetcnSave"
 
     source = "wallstreetcn"
     createdtime = datetime.datetime.now()
@@ -137,10 +134,12 @@ def func(page):
 
 
 if __name__ == '__main__':
+
     start = datetime.datetime.now()
 
     start_page = 1
-    end_page = 3000
+    end_page = 3300
+
 
     # 多进程抓取
     pages = [i for i in range(start_page, end_page)]
@@ -153,7 +152,7 @@ if __name__ == '__main__':
     # 单进程抓取
     page = end_page
 
-    while True:
+    while 1:
         url = "http://api.wallstreetcn.com/v2/livenews"
         # get参数
         data = {
