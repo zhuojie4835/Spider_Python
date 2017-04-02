@@ -1,0 +1,19 @@
+http://scrapy.readthedocs.io/en/latest/topics/selectors.html
+
+1.当抓取页面之后，需要从html源码中提取数据，有些库可以实现：
+	BeautifulSoup
+	lxml
+scrapy有自己的机制来提取数据，xpath或css表达式
+
+	使用Selector，基于 https://doc.scrapy.org/en/latest/_static/selectors-sample1.html
+	response.xpath('//base/@href').extract()
+	response.xpath('//div[@id="not-exists"]/text()').extract_first(default='not-found')
+
+	response.css('base::attr(href)').extract()
+	response.css('title::text').extract()
+
+	response.xpath('//div[@id="images"]/a/text()').extract_first()
+	response.xpath('//a[contains(@href, "image")]/@href').extract()
+	response.css('a[href*=image]::attr(href)').extract()
+	response.xpath('//a[contains(@href, "image")]/img/@src').extract()
+	response.css('a[href*=image] img::attr(src)').extract()

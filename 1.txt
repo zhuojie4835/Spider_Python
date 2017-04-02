@@ -1,0 +1,43 @@
+http://scrapy.readthedocs.io/en/latest/topics/spiders.html
+
+For spiders, the scraping cycle goes through something like this:
+
+### You start by generating the initial Requests to crawl the first URLs, and specify a callback function to be called with the response downloaded from those requests.
+
+### The first requests to perform are obtained by calling the start_requests() method which (by default) generates Request for the URLs specified in the start_urls and the parse method as callback function for the Requests.
+
+### In the callback function, you parse the response (web page) and return either dicts with extracted data, Item objects, Request objects, or an iterable of these objects. Those Requests will also contain a callback (maybe the same) and will then be downloaded by Scrapy and then their response handled by the specified callback.
+
+### In callback functions, you parse the page contents, typically using Selectors (but you can also use BeautifulSoup, lxml or whatever mechanism you prefer) and generate items with the parsed data.
+Finally, the items returned from the spider will be typically persisted to a database (in some Item Pipeline) or written to a file using Feed exports.
+
+1.class scrapy.spiders.Spider
+这是最简单的一种爬虫，所有的爬虫都必须继承，但不提供特别的功能。仅仅提供默认的start_request()方法使用start_urls属性发送请求，以及调用回调方法parse处理请求结果。
+		name
+		allowed_domains
+		start_urls
+		custom_settings
+		crawler 由from_crawler创建，和spider实例绑定
+		settings
+		logger
+		from_crawler(crawler, *args, **kwargs) 这个方法原来创建spider
+		start_requests() 一般不需重写，如果需要使用post请求登录时可以重写，将url转换成request的典型方法
+		make_requests_from_url(url) 接受一个URL，返回一个request对象，被用来start_urls()构建初始化请求
+		parse(response) 默认的处理响应的回调方法，必须返回 an iterable of Request and/or dicts or Item objects.
+		log(message[, level, component])
+		closed(reason)
+
+		Spider arguments
+		spider可以接受arguments来修改行为，使用 -a 传递参数，
+		例如：scrapy crawl myspider -a category=electronics，
+		spdier可以在__init__方法获取到arguments，类型只能是string
+		正当的使用场景是set the http auth credentials 
+
+		Generic Spiders
+
+2.class scrapy.spiders.CrawlSpider
+最通用的原来爬取网站的spider
+		rules 一个（或多个）rule对象的列表
+		parse_start_url(response)
+
+		Crawling rules
